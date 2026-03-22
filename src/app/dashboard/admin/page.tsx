@@ -50,35 +50,19 @@ export default async function AdminDashboard() {
     orderBy: { createdAt: "desc" }
   });
 
-  interface AccessCodeRaw {
-    id: string;
-    code: string;
-    used: boolean;
-    usedAt: Date | null;
-    courseTitle: string;
-    usedByName: string | null;
-  }
-
-  // Using Raw Query because Prisma Client couldn't generate the new model due to Windows Dev Server lock
-  const accessCodesRaw = await prisma.$queryRaw<AccessCodeRaw[]>`
-    SELECT 
-      ac.id, ac.code, ac.used, ac.usedAt,
-      c.title AS "courseTitle",
-      u.name AS "usedByName"
-    FROM AccessCode ac
-    LEFT JOIN Course c ON ac.courseId = c.id
-    LEFT JOIN User u ON ac.usedById = u.id
-    ORDER BY ac.createdAt DESC
-  `;
+  const accessCodesRaw = await prisma.accessCode.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { course: { select: { title: true } }, usedBy: { select: { name: true } } }
+  });
 
   const accessCodes = accessCodesRaw.map(ac => ({
     id: ac.id,
     code: ac.code,
-    used: Boolean(ac.used),
-    isUsed: Boolean(ac.used), // Added for compatibility with client component
+    used: ac.used,
+    isUsed: ac.used, 
     usedAt: ac.usedAt,
-    course: { title: ac.courseTitle },
-    usedBy: { name: ac.usedByName }
+    course: { title: ac.course?.title || "Unknown" },
+    usedBy: { name: ac.usedBy?.name || "Unused" }
   }));
 
   // System Settings Logic (Using local filesystem to bypass Prisma generate locks)

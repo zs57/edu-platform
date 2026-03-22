@@ -19,17 +19,25 @@ export default function LoginPage() {
     setIsLoading(true);
     setError("");
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
 
-    if (res?.error) {
-      setError("بيانات الدخول غير صحيحة، تأكد من الإيميل وباسوردك.");
+      if (res?.error) {
+        setError("بيانات الدخول غير صحيحة، تأكد من الإيميل وباسوردك.");
+        setIsLoading(false);
+      } else {
+        // More aggressive redirect for production
+        const params = new URLSearchParams(window.location.search);
+        const destination = params.get("from") || params.get("callbackUrl") || "/dashboard";
+        window.location.href = destination;
+      }
+    } catch (e) {
+      setError("حدث خطأ غير متوقع. حاول مرة أخرى.");
       setIsLoading(false);
-    } else {
-      router.push("/dashboard");
     }
   };
 
