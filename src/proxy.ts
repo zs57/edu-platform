@@ -26,6 +26,7 @@ export default withAuth(
     callbacks: {
       authorized: () => true,
     },
+    secret: process.env.NEXTAUTH_SECRET || "f15e8b4c2b9a1d3e5f7a9c1e3b5d7f9a1c2e4f6a",
   }
 );
 
