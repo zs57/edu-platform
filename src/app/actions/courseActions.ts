@@ -109,12 +109,14 @@ export async function generateAccessCodes(courseId: string, count: number, prefi
     for (let i = 0; i < count; i++) {
       const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
       const code = `${prefix}-${randomStr}`;
-      const id = `cuid_${Date.now()}_${Math.floor(Math.random() * 10000)}`; // Simple unique ID
       
-      await prisma.$executeRaw`
-        INSERT INTO AccessCode (id, code, courseId, used, createdAt) 
-        VALUES (${id}, ${code}, ${courseId}, 0, CURRENT_TIMESTAMP)
-      `;
+      await prisma.accessCode.create({
+        data: {
+          code,
+          courseId,
+          used: false,
+        }
+      });
     }
 
     revalidatePath("/dashboard/admin");
@@ -130,18 +132,23 @@ export async function activateCourseWithCode(codeString: string) {
     const session = await getServerSession(authOptions);
     if (!session?.user) throw new Error("يجب تسجيل الدخول أولاً.");
     const studentId = (session.user as { id: string }).id;
-    const rawRes = await prisma.$queryRaw<{ id: string; code: string; used: boolean; usedById: string | null; courseId: string; createdAt: Date; usedAt: Date | null }[]>`SELECT * FROM AccessCode WHERE code = ${codeString} LIMIT 1`;
-    const codeObj = rawRes[0];
+
+    const codeObj = await prisma.accessCode.findUnique({
+      where: { code: codeString }
+    });
 
     if (!codeObj) return { error: "الكود غير صحيح." };
     if (codeObj.used) return { error: "هذا الكود تم استخدامه مسبقاً." };
 
     // Mark code as used
-    await prisma.$executeRaw`
-      UPDATE AccessCode 
-      SET used = 1, usedById = ${studentId}, usedAt = CURRENT_TIMESTAMP 
-      WHERE id = ${codeObj.id}
-    `;
+    await prisma.accessCode.update({
+      where: { id: codeObj.id },
+      data: {
+        used: true,
+        usedById: studentId,
+        usedAt: new Date(),
+      }
+    });
 
     // Ensure we don't duplicate enrollments secretly
     const existing = await prisma.enrollment.findUnique({
