@@ -33,25 +33,16 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "منصة إتقان (ITQAN) | رحلتك نحو التميز في الثانوية العامة",
-    description: "انضم الآن لأقوى سيستم تعليمي في مصر. مراجعات، امتحانات، وشرح متكامل لكل المواد.",
+    description: "انضم الآن لأقوى سيستم تعليمي في مصر. مراجعات، امتحانات، وشرح متكامل لكل المواد المختارة بعناية.",
     url: "https://etkan.vercel.app",
     siteName: "منصة إتقان",
-    images: [
-      {
-        url: "https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png",
-        width: 1200,
-        height: 630,
-        alt: "منصة إتقان التعليمية",
-      },
-    ],
     locale: "ar_EG",
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "منصة إتقان (ITQAN) | عالمك التعليمي الجديد",
-    description: "أقوى شرح ومراجعات للثانوية العامة بين يديك.",
-    images: ["https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png"],
+    description: "أقوى شرح ومراجعات للثانوية العامة بين يديك بأحدث أساليب التعليم.",
   },
   robots: {
     index: true,
@@ -87,6 +78,29 @@ export default function RootLayout({
         </div>
         <NextTopLoader color="#3b82f6" height={3} showSpinner={false} />
         <ToasterProvider />
+        {/* JSON-LD Professional SEO Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              "name": "إتقان (ITQAN)",
+              "url": "https://etkan.vercel.app",
+              "logo": "https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png",
+              "description": "منصة تعليمية متخصصة في شرح مواد الثانوية العامة بأسلوب علمي مبتكر واحترافي لضمان التميز والوصول للدرجة النهائية.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Cairo",
+                "addressCountry": "Egypt"
+              },
+              "author": {
+                "@type": "Person",
+                "name": "Admin ITQAN"
+              }
+            })
+          }}
+        />
         <AuthProvider>
           {children}
         </AuthProvider>

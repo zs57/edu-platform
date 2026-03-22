@@ -271,10 +271,10 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                 initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
                 className="text-4xl md:text-7xl font-black text-white px-4"
               >
-                💎 ليه منصة &quot;الباير&quot; هي الاختيار الأول والوحيد؟
+                💎 ليه منصة &quot;إتقان&quot; هي الاختيار الأول والوحيد؟
               </motion.h2>
               <p className="text-zinc-400 text-xl md:text-2xl font-bold max-w-4xl mx-auto opacity-70">
-                في &quot;الباير&quot; إحنا لغينا زمن الساعات الضايعة في الرغي اللي ملوش لازمة، وطبقنا معادلة <span className="text-blue-500">(10 + 20 = تقفيل المادة)</span>.
+                في &quot;إتقان&quot; إحنا لغينا زمن الساعات الضايعة في الرغي اللي ملوش لازمة، وطبقنا معادلة <span className="text-blue-500">(10 + 20 = تقفيل المادة)</span>.
               </p>
             </div>
 
@@ -331,6 +331,77 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                </div>
             </motion.div>
          </div>
+      </section>
+
+      {/* NEW: Detailed How to Register Section */}
+      <section className="px-6 py-40 border-y border-white/5 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-24">
+             <motion.div 
+               initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+               className="inline-flex items-center gap-3 px-8 py-3 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 text-sm font-black mb-8"
+             >
+               <Rocket className="w-5 h-5" /> دليلك الشامل لطالب إتقان الذكي
+             </motion.div>
+             <h2 className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tight">إزاي تشترك في المنصة؟</h2>
+             <p className="text-zinc-500 text-2xl font-bold max-w-3xl mx-auto leading-relaxed">خطوات بسيطة جداً عشان تبدأ رحلتك التعليمية معانا وتضمن مستقبلك. ركز في الخطوات دي:</p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-10">
+             {[
+               {
+                 step: "01",
+                 title: "إنشاء حساب جديد",
+                 desc: "اضغط على زر 'سجل الآن' فوق، ودخل اسمك وإيميلك وباسوردك. الموضوع مش هياخد منك دقيقة! (ولازم تفتكر الإيميل والباسورد كويس).",
+                 icon: <Fingerprint className="w-10 h-10 text-blue-500" />
+               },
+               {
+                 step: "02",
+                 title: "تحديد سنتك الدراسية",
+                 desc: "بعد ما تسجل، المنصة هتفتح ليك لوحة التحكم. اختار 'المواد الدراسية' وحدد سنتك (أولى، تانية، أو تالتة ثانوي) عشان تشوف المنهج بتاعك.",
+                 icon: <Target className="w-10 h-10 text-emerald-500" />
+               },
+               {
+                 step: "03",
+                 title: "تفعيل الكود (Access Code)",
+                 desc: "كل مادة محتاجة 'كود تفعيل' بتجيبه من السنتر أو المدرس. اضغط على المادة واكتب الكود بتاعك في الخانة المخصصة عشان تفتح المادة.",
+                 icon: <Lock className="w-10 h-10 text-amber-500" />
+               },
+               {
+                 step: "04",
+                 title: "انطلق للمذاكرة والتقفيل!",
+                 desc: "بمجرد كتابة الكود، المادة هتفتح ليك للأبد. تقدر تشوف الحصص، وتحمل المذكرات، وتمتحن وتشوف نتيجتك وتحليلك فوراً.",
+                 icon: <Rocket className="w-10 h-10 text-purple-500" />
+               }
+             ].map((item, i) => (
+               <motion.div 
+                 key={i}
+                 initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
+                 className="p-12 bg-zinc-950/40 border border-white/5 rounded-[4rem] relative group hover:bg-zinc-900/40 transition-all hover:border-blue-500/20 shadow-2xl"
+               >
+                 <span className="absolute top-10 right-10 text-8xl font-black text-white/5 group-hover:text-blue-500/10 transition-colors pointer-events-none">{item.step}</span>
+                 <div className="w-20 h-20 bg-black rounded-[2rem] border border-white/10 flex items-center justify-center mb-10 shadow-2xl group-hover:scale-110 transition-transform relative z-10">
+                   {item.icon}
+                 </div>
+                 <h4 className="text-3xl font-black text-white mb-6 relative z-10">{item.title}</h4>
+                 <p className="text-zinc-500 font-bold text-lg leading-relaxed relative z-10 group-hover:text-zinc-400 transition-colors">{item.desc}</p>
+               </motion.div>
+             ))}
+          </div>
+
+          <div className="mt-32 p-12 md:p-20 bg-gradient-to-br from-blue-700 to-indigo-800 rounded-[5rem] flex flex-col md:flex-row items-center justify-between gap-12 shadow-[0_0_80px_rgba(59,130,246,0.2)] overflow-hidden relative group">
+             <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay" />
+             <div className="relative z-10 text-center md:text-right">
+                <h3 className="text-4xl md:text-6xl font-black text-white mb-6">واجهت أي مشكلة يا بطل؟</h3>
+                <p className="text-blue-100 font-bold text-2xl max-w-xl">فريق الدعم الفني في إتقان متاح 24 ساعة للرد على استفساراتك ومساعدتك في أي وقت.</p>
+             </div>
+             <Link href="https://wa.me/201234567890" target="_blank" className="relative z-10 bg-white text-blue-700 px-16 py-7 rounded-[2rem] font-black text-2xl hover:scale-110 transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] flex items-center gap-4 group/wa">
+                تواصل معنا الآن <ChevronLeft className="w-8 h-8 group-hover/wa:-translate-x-3 transition-transform" />
+             </Link>
+          </div>
+        </div>
       </section>
 
       {/* Courses Section (Redesigned Extra Kharafi) */}
