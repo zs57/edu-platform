@@ -12,12 +12,63 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "منصة إتقان (ITQAN) | إمبراطورية العلم في جيبك",
-  description: "منصة إتقان التعليمية أونلاين، شرح المواد العلمية للثانوية العامة، مراجعات شاملة وأنظمة اختبارات ذكية. إحنا مش مجرد منصة بتشرح دروس، إحنا سيستم متكامل مبني على إتقان الوقت والجهد.",
-  keywords: "منصة تعليمية أونلاين, شرح كيمياء ثانوية عامة, مراجعة فيزياء لغات وعربي, أفضل مدرس كيمياء ثانوية عامة, ملخصات ثانوية عامة PDF, حل امتحانات السنين السابقة, خلاصة المنهج في فيديو, شرح الدرس في 10 دقائق, مراجعة نهائية فيزياء, توقعات امتحان الكيمياء, أقوى ملخص كيمياء وثانوية عامة, منصة البايو التعليمية, نظام التابلت الجديد, أسئلة بنك المعرفة, حل امتحانات الوزارة, مراجعة الفصل بفصل, إزاي ألم منهج الكيمياء في وقت قصير؟, أفضل طريقة لمراجعة الفيزياء ثانوية عامة, تحميل ملخصات كيمياء وفيزياء لثالثة ثانوي, منصة شرح فيزياء بأسلوب سهل ومبسط, ثانوية عامة",
+  metadataBase: new URL("https://etkan.vercel.app"),
+  title: {
+    default: "منصة إتقان (ITQAN) | إمبراطورية العلم في جيبك للثانوية العامة",
+    template: "%s | منصة إتقان"
+  },
+  description: "منصة إتقان التعليمية - المرجع الأول لطالب الثانوية العامة. شرح مواد، مراجعات نهائية، تدريبات ذكية، ومتابعة دورية. نوفر لك الخلاصة في الكيمياء، الفيزياء، والأحياء بأسلوب علمي مبتكر.",
+  keywords: [
+    "منصة إتقان", "منصة تعليمية أونلاين", "ثانوية عامة 2024", "ثانوية عامة 2025", 
+    "شرح كيمياء", "مراجعة فيزياء", "أحياء ثانوية عامة", "بنك المعرفة", 
+    "مراجعة نهائية", "نظام التابلت", "مدرسين ثانوية عامة", "أكاديمية تعليمية"
+  ],
+  authors: [{ name: "ITQAN Team" }],
+  creator: "ITQAN Academy",
+  publisher: "ITQAN Platform",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: "منصة إتقان (ITQAN) | رحلتك نحو التميز في الثانوية العامة",
+    description: "انضم الآن لأقوى سيستم تعليمي في مصر. مراجعات، امتحانات، وشرح متكامل لكل المواد.",
+    url: "https://etkan.vercel.app",
+    siteName: "منصة إتقان",
+    images: [
+      {
+        url: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
+        width: 1200,
+        height: 630,
+        alt: "منصة إتقان التعليمية",
+      },
+    ],
+    locale: "ar_EG",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "منصة إتقان (ITQAN) | عالمك التعليمي الجديد",
+    description: "أقوى شرح ومراجعات للثانوية العامة بين يديك.",
+    images: ["https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
-  }
+    shortcut: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
+    apple: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
+  },
 };
 
 export default function RootLayout({
