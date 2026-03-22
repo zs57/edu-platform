@@ -26,13 +26,18 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Bootstrap: First user is admin, and specifically the owner's email
+    const userCount = await prisma.user.count();
+    const isOwner = email === "z51722369@gmail.com";
+    const isFirstUser = userCount === 0;
+
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         gradeLevel,
-        role: role === "ADMIN" ? "ADMIN" : "STUDENT",
+        role: (isOwner || isFirstUser) ? "ADMIN" : (role === "ADMIN" ? "ADMIN" : "STUDENT"), 
       }
     });
 

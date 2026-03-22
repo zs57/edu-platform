@@ -70,7 +70,7 @@ export default function LoginPage() {
               تسجيل الدخول <Sparkles className="w-8 h-8 text-amber-400" />
             </h1>
             <p className="text-zinc-400 text-lg font-medium leading-relaxed">
-              مرحباً بك مجدداً في <span className="text-blue-400 font-black">منصة الباير</span>. استكمل رحلتك نحو التميز الحقيقي.
+              مرحباً بك مجدداً في <span className="text-blue-400 font-black">منصة إتقان (ITQAN)</span>. استكمل رحلتك نحو التميز الحقيقي.
             </p>
           </div>
 
