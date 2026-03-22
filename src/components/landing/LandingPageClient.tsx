@@ -81,7 +81,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
             <div className="w-14 h-14 relative group-hover:scale-110 transition-transform duration-500">
                <Image 
                  src="https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png" 
-                 alt="ITQAN Logo" 
+                 alt="" 
                  fill 
                  className="object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                />
@@ -397,7 +397,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                 <h3 className="text-4xl md:text-6xl font-black text-white mb-6">واجهت أي مشكلة يا بطل؟</h3>
                 <p className="text-blue-100 font-bold text-2xl max-w-xl">فريق الدعم الفني في إتقان متاح 24 ساعة للرد على استفساراتك ومساعدتك في أي وقت.</p>
              </div>
-             <Link href="https://wa.me/201234567890" target="_blank" className="relative z-10 bg-white text-blue-700 px-16 py-7 rounded-[2rem] font-black text-2xl hover:scale-110 transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] flex items-center gap-4 group/wa">
+             <Link href="https://wa.me/201028914389" target="_blank" className="relative z-10 bg-white text-blue-700 px-16 py-7 rounded-[2rem] font-black text-2xl hover:scale-110 transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] flex items-center gap-4 group/wa">
                 تواصل معنا الآن <ChevronLeft className="w-8 h-8 group-hover/wa:-translate-x-3 transition-transform" />
              </Link>
           </div>
@@ -527,7 +527,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
               <div className="w-20 h-20 relative group-hover:scale-110 transition-transform duration-500">
                  <Image 
                    src="https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png" 
-                   alt="ITQAN Logo" 
+                   alt="" 
                    fill 
                    className="object-contain"
                  />
@@ -542,7 +542,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
               <Link href="#" className="hover:text-blue-500 transition-colors">فيسبوك</Link>
               <Link href="#" className="hover:text-amber-500 transition-colors">يوتيوب</Link>
               <Link href="#" className="hover:text-indigo-500 transition-colors">تليجرام</Link>
-              <Link href="#" className="hover:text-emerald-500 transition-colors">واتساب</Link>
+              <Link href="https://wa.me/201028914389" target="_blank" className="hover:text-emerald-500 transition-colors">واتساب</Link>
            </div>
            
            <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] font-black text-zinc-700 tracking-[0.2em] uppercase">
