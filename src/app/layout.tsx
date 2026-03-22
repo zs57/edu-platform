@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "منصة إتقان",
     images: [
       {
-        url: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
+        url: "https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png",
         width: 1200,
         height: 630,
         alt: "منصة إتقان التعليمية",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "منصة إتقان (ITQAN) | عالمك التعليمي الجديد",
     description: "أقوى شرح ومراجعات للثانوية العامة بين يديك.",
-    images: ["https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png"],
+    images: ["https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png"],
   },
   robots: {
     index: true,
@@ -65,9 +65,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
-    shortcut: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
-    apple: "https://i.postimg.cc/gJkTRyyz/Screenshot-2026-03-22-191339.png",
+    icon: "https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png",
+    shortcut: "https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png",
+    apple: "https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png",
   },
 };
 

@@ -78,12 +78,17 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
       <nav className={`fixed w-full z-50 top-0 transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-4 shadow-xl' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-12 transition-transform duration-500">
-              <Zap className="w-7 h-7 text-white" fill="currentColor" />
+            <div className="w-14 h-14 relative group-hover:scale-110 transition-transform duration-500">
+               <Image 
+                 src="https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png" 
+                 alt="ITQAN Logo" 
+                 fill 
+                 className="object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+               />
             </div>
             <div className="flex flex-col">
-               <span className="text-2xl font-black text-white tracking-widest leading-none">أكاديمية ألفا</span>
-               <span className="text-[10px] font-black text-blue-400 tracking-[0.2em] uppercase mt-1">Alpha Systems</span>
+               <span className="text-3xl font-black text-white tracking-tight leading-none">إتقان</span>
+               <span className="text-[10px] font-black text-blue-400 tracking-[0.3em] uppercase mt-1.5 opacity-80">ITQAN PLATFORM</span>
             </div>
           </Link>
           
@@ -93,7 +98,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all group-hover:w-full"></span>
             </Link>
             <Link href="#features" className="hover:text-blue-400 transition-colors relative group">
-              لماذا الباير؟
+              لماذا إتقان؟
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all group-hover:w-full"></span>
             </Link>
             <Link href="/dashboard" className="flex items-center gap-2 hover:text-blue-400 transition-colors">
@@ -448,8 +453,13 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
         
         <div className="max-w-7xl mx-auto px-6 text-center space-y-12">
            <div className="flex flex-col items-center gap-6">
-              <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-[1.5rem] flex items-center justify-center shadow-2xl group cursor-pointer hover:rotate-12 transition-transform">
-                <Zap className="w-8 h-8 text-white" fill="currentColor" />
+              <div className="w-20 h-20 relative group-hover:scale-110 transition-transform duration-500">
+                 <Image 
+                   src="https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png" 
+                   alt="ITQAN Logo" 
+                   fill 
+                   className="object-contain"
+                 />
               </div>
               <h2 className="text-3xl font-black text-white tracking-widest">أكاديمية إتقان</h2>
               <p className="text-zinc-500 font-bold text-xl max-w-sm mx-auto leading-relaxed">
@@ -465,7 +475,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
            </div>
            
            <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] font-black text-zinc-700 tracking-[0.2em] uppercase">
-              <p>© 2026 ألفا للبرمجيات. جميع الحقوق محفوظة لسيادة الطالب الأول.</p>
+               <p>© 2026 منصة إتقان (ITQAN). جميع الحقوق محفوظة لسيادة الطالب الأول.</p>
               <div className="flex items-center gap-4">
                  <span className="flex items-center gap-2"><MousePointer2 className="w-3 h-3 text-blue-500" /> Precision Design</span>
                  <span className="flex items-center gap-2"><Lock className="w-3 h-3 text-emerald-500" /> Secure Systems</span>
