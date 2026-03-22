@@ -5,21 +5,21 @@ export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const isAuth = !!token;
-    const isAuthPage = req.nextUrl.pathname.startsWith("/auth/login") || req.nextUrl.pathname.startsWith("/auth/register");
+    const isDashboardPage = req.nextUrl.pathname.startsWith("/dashboard");
 
-    if (isAuthPage) {
-      if (isAuth) {
-        return NextResponse.redirect(new URL("/dashboard", req.url));
-      }
-      return null;
-    }
-
-    if (!isAuth) {
+    // If trying to access dashboard and NOT authenticated, redirect to login
+    if (isDashboardPage && !isAuth) {
       let from = req.nextUrl.pathname;
       if (req.nextUrl.search) {
         from += req.nextUrl.search;
       }
       return NextResponse.redirect(new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url));
+    }
+
+    // If ALREADY authenticated and trying to access auth pages, redirect to dashboard
+    const isAuthPage = req.nextUrl.pathname.startsWith("/auth/login") || req.nextUrl.pathname.startsWith("/auth/register");
+    if (isAuth && isAuthPage) {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   },
   {
