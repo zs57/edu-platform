@@ -134,10 +134,10 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
             </motion.div>
             
             <motion.h1 variants={itemVariants} className="text-6xl md:text-9xl font-black text-white leading-[1.1] tracking-tighter mix-blend-plus-lighter">
-               منصة الباير (EL-BIO) <br />
+               منصة إتقان (ITQAN) <br />
                <span className="relative inline-block mt-4">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 drop-shadow-[0_0_40px_rgba(59,130,246,0.3)]">
-                    إمبراطورية الكيمياء والفيزياء في جيبك!
+                    إمبراطورية العلم والتفوق في جيبك!
                   </span>
                   <motion.div 
                     initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 1, delay: 0.5 }}
@@ -147,7 +147,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
             </motion.h1>
               
             <motion.p variants={itemVariants} className="text-xl md:text-3xl text-zinc-400 max-w-5xl mx-auto leading-relaxed font-bold opacity-80 decoration-blue-500/30">
-              لو فاكر إن الثانوية العامة &quot;بعبع&quot; أو إن الفيزياء والكيمياء هما العقدة.. يبقى أنت لسه مشفتش الباير. إحنا مش مجرد منصة بتشرح دروس، إحنا سيستم متكامل مبني على &quot;ذكاء الوقت&quot; عشان يخليك تفرتك المنهج وأنت في قمة روقانك.
+              لو فاكر إن الثانوية العامة &quot;عقدة&quot; أو إن المذاكرة حمل تقيل.. يبقى أنت لسه مشفتش إتقان. إحنا مش مجرد منصة بتشرح دروس، إحنا سيستم متكامل مبني على &quot;إتقان الوقت&quot; عشان يخليك تفرتك المنهج وأنت في قمة روقانك.
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 pt-10 justify-center">
@@ -322,7 +322,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                   أنت هتخلص الدرس بكل مشتملاته (شرح، ملخص، حل امتحانات) في <span className="text-blue-400 underline decoration-blue-500/30 underline-offset-8 decoration-4">نص ساعة بس</span>. نص ساعة هتخليك &quot;برنس&quot; القاعة، وتوفر باقي يومك لمذاكرة مواد تانية أو حتى لروقانك الشخصي.
                </p>
                <div className="mt-10 inline-block px-10 py-5 bg-white/5 rounded-2xl border border-white/10">
-                 <p className="text-blue-400 font-black text-2xl md:text-4xl drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]">الباير (EL-BIO): إحنا مش بنشرح منهج.. إحنا بنبني عقول بتعرف تسيطر!</p>
+                 <p className="text-blue-400 font-black text-2xl md:text-4xl drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]">إتقان (ITQAN): إحنا مش بنشرح منهج.. إحنا بنبني عقول قادرة على التفوق!</p>
                </div>
             </motion.div>
          </div>
@@ -451,9 +451,9 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
               <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-[1.5rem] flex items-center justify-center shadow-2xl group cursor-pointer hover:rotate-12 transition-transform">
                 <Zap className="w-8 h-8 text-white" fill="currentColor" />
               </div>
-              <h2 className="text-3xl font-black text-white tracking-widest">أكاديمية ألفا</h2>
+              <h2 className="text-3xl font-black text-white tracking-widest">أكاديمية إتقان</h2>
               <p className="text-zinc-500 font-bold text-xl max-w-sm mx-auto leading-relaxed">
-                عملناها عشانك.. عشان تنجح وتفرح أهلك، الطريق للقمة بيبدأ بخطوة بسيطة في الباير.
+                عملناها عشانك.. عشان تنجح وتفرح أهلك، الطريق للقمة بيبدأ بخطوة بسيطة في إتقان.
               </p>
            </div>
            
