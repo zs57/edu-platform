@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         email,
         password: hashedPassword,
         gradeLevel,
-        role: role === "ADMIN" ? "ADMIN" : "STUDENT", 
+        role: role === "ADMIN" ? "ADMIN" : "STUDENT",
       }
     });
 
