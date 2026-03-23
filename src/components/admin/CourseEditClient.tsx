@@ -73,22 +73,19 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
       examUrl: ch.examUrl || "",
       examCode: ch.examCode || "",
       lessons: ch.lessons.map((l) => ({
-      id: l.id,
-      title: l.title,
-      description: l.description || "",
-      videoUrl: l.videoUrl || "",
-      content: l.content || "",
-      attachments: l.attachments?.map((a) => ({
-        id: a.id,
-        title: a.title,
-        fileUrl: a.fileUrl
-      })) || []
+        id: l.id,
+        title: l.title,
+        description: l.description || "",
+        videoUrl: l.videoUrl || "",
+        content: l.content || "",
+        attachments: l.attachments?.map((a) => ({
+          id: a.id,
+          title: a.title,
+          fileUrl: a.fileUrl
+        })) || []
+      }))
     }))
-  }));
-
-  const [chapters, setChapters] = useState<Chapter[]>(initialChapters.length > 0 ? initialChapters : [
-    { title: "الفصل الأول", examUrl: "", lessons: [{ title: "الدرس الأول", description: "", videoUrl: "", content: "", attachments: [] }] }
-  ]);
+  );
 
   const addChapter = () => {
     setChapters([...chapters, { title: `الفصل الجديد`, lessons: [] }]);
