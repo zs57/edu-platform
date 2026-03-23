@@ -154,7 +154,7 @@ export async function updateCourseWithCurriculum(courseId: string, data: CourseC
                 videoUrl: lessonData.videoUrl || null,
                 content: lessonData.content || null,
                 order: lIndex + 1,
-                isLocked: true, 
+                isLocked: false, 
                 chapterId: chapterId,
                 attachments: (lessonData.attachments && lessonData.attachments.length > 0) ? {
                   create: lessonData.attachments.map((a) => ({

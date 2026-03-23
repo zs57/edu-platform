@@ -81,7 +81,7 @@ export async function createCourseWithCurriculum(data: CourseCurriculumData) {
             videoUrl: lessonData.videoUrl || null,
             content: lessonData.content || null,
             order: lIndex + 1,
-            isLocked: true,
+            isLocked: false,
             chapterId: chapter.id,
             attachments: (lessonData.attachments && lessonData.attachments.length > 0) ? {
               create: lessonData.attachments.map((a: { title: string; fileUrl: string; type: string }) => ({
@@ -167,6 +167,27 @@ export async function activateCourseWithCode(codeString: string) {
     revalidatePath(`/dashboard/courses/${codeObj.courseId}`);
     revalidatePath("/dashboard/profile");
     return { success: true, courseId: codeObj.courseId };
+  } catch (e: unknown) {
+    const error = e as Error;
+    return { error: error.message };
+  }
+}
+
+export async function toggleLessonCompletion(lessonId: string, completed: boolean) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) throw new Error("يجب تسجيل الدخول أولاً.");
+    const userId = (session.user as { id: string }).id;
+
+    await prisma.progress.upsert({
+      where: { userId_lessonId: { userId, lessonId } },
+      update: { completed },
+      create: { userId, lessonId, completed }
+    });
+
+    revalidatePath("/dashboard/courses");
+    revalidatePath(`/dashboard/courses/lessons/${lessonId}`);
+    return { success: true };
   } catch (e: unknown) {
     const error = e as Error;
     return { error: error.message };
