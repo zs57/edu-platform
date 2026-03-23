@@ -55,25 +55,25 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
   };
 
   const itemVariants: Variants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } }
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
   const floatVariants: Variants = {
     animate: {
-      y: [0, -20, 0],
-      transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+      y: [0, -10, 0],
+      transition: { duration: 5, repeat: Infinity, ease: "linear" }
     }
   };
 
   return (
     <div className="bg-[#050505] selection:bg-blue-500/30 overflow-hidden relative" dir="rtl">
-      {/* Light Background Strategy */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 bg-[#050505]">
-        <div className="absolute top-0 inset-x-0 h-[500px] bg-gradient-to-b from-blue-600/5 to-transparent" />
+      {/* Optimized Background Strategy */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 bg-black">
+        <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-blue-900/10 to-transparent" />
       </div>
 
-      <nav className={`fixed w-full z-50 top-0 transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-4 shadow-xl' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed w-full z-50 top-0 transition-colors duration-300 ${scrolled ? 'bg-zinc-950 border-b border-white/5 py-3 shadow-xl' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-12 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-blue-600/20 transition-all">
@@ -130,13 +130,9 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                <Sparkles className="w-5 h-5" /> التحديث الأقوى للمنصة وصل!
             </div>
             
-            <h1 className="text-6xl md:text-9xl font-black text-white leading-[1.1] tracking-tighter">
+            <h1 className="text-5xl md:text-8xl font-black text-white leading-tight tracking-tighter">
                منصة إتقان (ITQAN) <br />
-               <span className="relative inline-block mt-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400">
-                    إمبراطورية العلم والتفوق في جيبك!
-                  </span>
-               </span>
+               <span className="text-blue-500">إمبراطورية العلم والتفوق!</span>
             </h1>
               
             <motion.p variants={itemVariants} className="text-xl md:text-3xl text-zinc-400 max-w-5xl mx-auto leading-relaxed font-bold opacity-80 decoration-blue-500/30">
@@ -247,8 +243,8 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
         </div>
       </section>
 
-      {/* Main Features Grid (Premium Design) */}
-      <section id="features" className="py-32 relative bg-zinc-950/20 backdrop-blur-xl border-y border-white/5">
+      {/* Main Features Grid (Performance Optimized) */}
+      <section id="features" className="py-24 relative bg-zinc-900/20 border-y border-white/5">
          <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-24 space-y-6">
               <motion.h2 
@@ -417,11 +413,9 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                  const lessonsCount = course.chapters?.reduce((acc: number, ch: Chapter) => acc + ch.lessons.length, 0) || 0;
                  
                  return (
-                   <motion.div 
-                     initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: idx * 0.15 }}
-                     whileHover={{ y: -15 }} key={course.id} 
-                     className={`bg-zinc-950/40 rounded-[3rem] overflow-hidden flex flex-col group border transition-all duration-700 relative shadow-2xl backdrop-blur-xl ${glowClass}`}
-                   >
+                    <div key={course.id} 
+                      className={`bg-zinc-900/60 rounded-[2.5rem] overflow-hidden flex flex-col group border transition-all duration-300 relative shadow-xl ${glowClass}`}
+                    >
                      {/* Floating Badge (Price) */}
                      <div className="absolute top-8 right-8 z-30">
                         <div className={`px-6 py-3 rounded-2xl bg-black/80 backdrop-blur-xl border font-black text-xl tracking-tighter ${isBlue ? 'border-blue-500/30 text-blue-400' : 'border-emerald-500/30 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]'}`}>
