@@ -4,6 +4,7 @@ import "./globals.css";
 import AuthProvider from "@/components/providers/AuthProvider";
 import NextTopLoader from 'nextjs-toploader';
 import ToasterProvider from "@/components/ToasterProvider"; // Added ToasterProvider import
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -103,6 +104,7 @@ export default function RootLayout({
         />
         <AuthProvider>
           {children}
+          <SpeedInsights />
         </AuthProvider>
       </body>
     </html>
