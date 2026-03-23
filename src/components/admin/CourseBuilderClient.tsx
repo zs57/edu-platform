@@ -31,6 +31,7 @@ interface Lesson {
 interface Chapter {
   title: string;
   examUrl: string;
+  examCode?: string;
   lessons: Lesson[];
 }
 
@@ -46,14 +47,15 @@ export default function CourseBuilderClient({ existingSubjects }: { existingSubj
   const [gradeLevel, setGradeLevel] = useState("الأول الثانوي");
   const [imageUrl, setImageUrl] = useState("");
   const [examUrl, setExamUrl] = useState("");
+  const [examCode, setExamCode] = useState("");
   const [isExamOnly, setIsExamOnly] = useState(false);
 
   const [chapters, setChapters] = useState<Chapter[]>([
-    { title: "الفصل الأول", examUrl: "", lessons: [{ title: "الدرس الأول", description: "", videoUrl: "", content: "", attachments: [] }] }
+    { title: "الفصل الأول", examUrl: "", examCode: "", lessons: [{ title: "الدرس الأول", description: "", videoUrl: "", content: "", attachments: [] }] }
   ]);
 
   const addChapter = () => {
-    setChapters([...chapters, { title: `الفصل الجديد`, examUrl: "", lessons: [] }]);
+    setChapters([...chapters, { title: `الفصل الجديد`, examUrl: "", examCode: "", lessons: [] }]);
   };
 
   const addLesson = (cIndex: number) => {
@@ -136,7 +138,7 @@ export default function CourseBuilderClient({ existingSubjects }: { existingSubj
 
     startTransition(async () => {
       const selectedSubject = existingSubjects.find((s) => s.id === subjectId);
-      const data = { title, description, price, subjectName: selectedSubject?.name || "", gradeLevel, imageUrl, examUrl, isExamOnly, chapters };
+      const data = { title, description, price, subjectName: selectedSubject?.name || "", gradeLevel, imageUrl, examUrl, examCode, isExamOnly, chapters };
       const res = await createCourseWithCurriculum(data);
       if (res.error) toast.error(res.error);
       else {
@@ -202,6 +204,25 @@ export default function CourseBuilderClient({ existingSubjects }: { existingSubj
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div>
+              <label className="block text-sm font-bold text-zinc-400 mb-2">رابط امتحان الكورس (اختياري)</label>
+              <input type="text" value={examUrl} onChange={e => setExamUrl(e.target.value)} className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-blue-400 font-bold outline-none focus:border-blue-500 transition-colors mb-4" placeholder="رابط خارجي" dir="ltr" />
+              
+              <label className="block text-sm font-bold text-emerald-400 mb-2">كود برمجي للامتحان (HTML/CSS) ✨</label>
+              <textarea value={examCode} onChange={e => setExamCode(e.target.value)} rows={4} className="w-full bg-zinc-950 border border-white/5 rounded-xl p-3 text-xs text-zinc-300 outline-none font-mono" placeholder="<iframe>...</iframe>"></textarea>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-xl p-3 mt-7">
+                <input type="checkbox" id="isExamOnly" checked={isExamOnly} onChange={e => setIsExamOnly(e.target.checked)} className="w-5 h-5 accent-blue-500 cursor-pointer" />
+                <label htmlFor="isExamOnly" className="text-sm font-bold text-white cursor-pointer select-none">هذا الكورس عبارة عن امتحان فقط</label>
+              </div>
+              <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-400">
+                سيتم عرض الكود البرمجي في نافذة منبثقة احترافية للطلاب.
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
               <label className="block text-sm font-bold text-zinc-400 mb-2">صورة الغلاف (رابط أو رفع)</label>
               <div className="flex gap-2">
                 <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className="flex-1 bg-zinc-900 border border-white/10 rounded-xl p-3 text-xs text-white outline-none" placeholder="https://..." />
@@ -246,7 +267,13 @@ export default function CourseBuilderClient({ existingSubjects }: { existingSubj
                 
                 <div className="mb-6 w-full space-y-4">
                   <input type="text" value={chapter.title} onChange={e => { const nc = [...chapters]; nc[cIndex].title = e.target.value; setChapters(nc); }} className="w-full bg-transparent border-b border-white/10 p-2 text-xl font-bold text-white outline-none focus:border-emerald-500" placeholder="اسم الفصل..." />
-                  <input type="url" value={chapter.examUrl || ""} onChange={e => { const nc = [...chapters]; nc[cIndex].examUrl = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 border border-white/5 rounded-xl p-3 text-sm text-blue-300 outline-none shadow-inner" placeholder="رابط امتحان الفصل" />
+                  <div>
+                    <label className="block text-xs font-bold text-blue-400/80 mb-1">رابط امتحان الفصل (اختياري)</label>
+                    <input type="url" value={chapter.examUrl || ""} onChange={e => { const nc = [...chapters]; nc[cIndex].examUrl = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 border border-white/5 focus:border-blue-500/50 rounded-xl p-3 text-sm text-blue-300 outline-none transition-colors shadow-inner mb-2" placeholder="ضع رابط خارجي" />
+                    
+                    <label className="block text-[10px] font-bold text-emerald-400 mb-1">أو كود الامتحان (Embed Code)</label>
+                    <textarea value={chapter.examCode || ""} onChange={e => { const nc = [...chapters]; nc[cIndex].examCode = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 border border-white/5 rounded-xl p-3 text-xs text-zinc-500 outline-none font-mono h-20" placeholder="<iframe>...</iframe>"></textarea>
+                  </div>
                 </div>
 
                 <div className="space-y-3 pr-8 border-r-2 border-white/5">

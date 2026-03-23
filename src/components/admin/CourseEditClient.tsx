@@ -32,6 +32,7 @@ interface Chapter {
   id?: string;
   title: string;
   examUrl?: string | null;
+  examCode?: string | null;
   lessons: Lesson[];
 }
 
@@ -43,6 +44,7 @@ interface CourseData {
   image: string | null;
   gradeLevel: string | null;
   examUrl: string | null;
+  examCode: string | null;
   isExamOnly: boolean;
   subject: { name: string };
   chapters: (Chapter & { lessons: (Lesson & { attachments: Attachment[] })[] })[];
@@ -60,13 +62,17 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
   const [gradeLevel, setGradeLevel] = useState(course.gradeLevel || "الأول الثانوي");
   const [imageUrl, setImageUrl] = useState(course.image || "");
   const [examUrl, setExamUrl] = useState(course.examUrl || "");
+  const [examCode, setExamCode] = useState(course.examCode || "");
   const [isExamOnly, setIsExamOnly] = useState(course.isExamOnly || false);
 
   // Initialize chapters from course data
-  const initialChapters: Chapter[] = course.chapters.map((ch) => ({
-    id: ch.id,
-    title: ch.title,
-    lessons: ch.lessons.map((l) => ({
+  const [chapters, setChapters] = useState<Chapter[]>(
+    course.chapters.map((ch) => ({
+      id: ch.id,
+      title: ch.title,
+      examUrl: ch.examUrl || "",
+      examCode: ch.examCode || "",
+      lessons: ch.lessons.map((l) => ({
       id: l.id,
       title: l.title,
       description: l.description || "",
@@ -172,7 +178,7 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
     if (!title || !subjectName) return toast.error("الرجاء إدخال اسم الكورس والمادة!");
 
     startTransition(async () => {
-      const data = { title, description, price, subjectName, gradeLevel, imageUrl, examUrl, isExamOnly, chapters };
+      const data = { title, description, price, subjectName, gradeLevel, imageUrl, examUrl, examCode, isExamOnly, chapters };
       const res = await updateCourseWithCurriculum(course.id, data);
       if (res.error) toast.error(res.error);
       else {
@@ -268,12 +274,20 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border-t border-white/5 pt-6">
               <div>
-                <label className="block text-sm font-bold text-zinc-400 mb-2">رابط امتحان الكورس الشامل (إن وجد)</label>
-                <input type="text" value={examUrl} onChange={e => setExamUrl(e.target.value)} className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 text-blue-400 font-bold outline-none focus:border-blue-500 transition-colors shadow-inner" placeholder="رابط Google Form أو منصة امتحانات..." dir="ltr" />
+                <label className="block text-sm font-bold text-zinc-400 mb-2">رابط امتحان خارجي (اختياري)</label>
+                <input type="text" value={examUrl} onChange={e => setExamUrl(e.target.value)} className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 text-blue-400 font-bold outline-none focus:border-blue-500 transition-colors shadow-inner mb-4" placeholder="رابط Google Form..." dir="ltr" />
+                
+                <label className="block text-sm font-bold text-zinc-400 mb-2 font-black text-emerald-400">ملفات الامتحان (HTML/Embed) - يظهر بشكل احترافي ✨</label>
+                <textarea value={examCode} onChange={e => setExamCode(e.target.value)} rows={4} className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 text-zinc-300 font-mono text-xs outline-none focus:border-emerald-500 transition-colors shadow-inner" placeholder="Pasted HTML/Embed code here..."></textarea>
               </div>
-              <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-2xl p-4 mt-7 hover:border-blue-500/50 transition-colors cursor-pointer" onClick={() => setIsExamOnly(!isExamOnly)}>
-                <input type="checkbox" id="isExamOnlyEdit" checked={isExamOnly} onChange={e => setIsExamOnly(e.target.checked)} onClick={e => e.stopPropagation()} className="w-5 h-5 accent-blue-500 cursor-pointer" />
-                <label htmlFor="isExamOnlyEdit" className="text-sm font-bold text-white cursor-pointer select-none">هذا الكورس عبارة عن امتحان فقط (لن تظهر الدروس)</label>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3 bg-zinc-900 border border-white/10 rounded-2xl p-4 mt-7 hover:border-blue-500/50 transition-colors cursor-pointer" onClick={() => setIsExamOnly(!isExamOnly)}>
+                  <input type="checkbox" id="isExamOnlyEdit" checked={isExamOnly} onChange={e => setIsExamOnly(e.target.checked)} onClick={e => e.stopPropagation()} className="w-5 h-5 accent-blue-500 cursor-pointer" />
+                  <label htmlFor="isExamOnlyEdit" className="text-sm font-bold text-white cursor-pointer select-none">هذا الكورس عبارة عن امتحان فقط (لن تظهر الدروس)</label>
+                </div>
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 leading-relaxed">
+                  💡 تلميح: عند وضع كود الإطار (Embed Code) سيتم عرض الامتحان داخل نافذة احترافية للطلاب بدلاً من مغادرة الموقع.
+                </div>
               </div>
             </div>
         </div>
@@ -305,8 +319,11 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
                     <input type="text" value={chapter.title} onChange={e => { const nc = [...chapters]; nc[cIndex].title = e.target.value; setChapters(nc); }} className="w-full bg-transparent border-b-2 border-white/10 focus:border-emerald-500 p-2 text-2xl font-black text-white outline-none transition-colors" placeholder="مثال: الباب الأول - الكيمياء العضوية" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-blue-400/80 mb-1">رابط امتحان الفصل الشامل (اختياري)</label>
-                    <input type="url" value={chapter.examUrl || ""} onChange={e => { const nc = [...chapters]; nc[cIndex].examUrl = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 border border-white/5 focus:border-blue-500/50 rounded-xl p-3 text-sm text-blue-300 outline-none transition-colors shadow-inner" placeholder="ضع رابط خارجي للاختبار كـ Google Forms" />
+                    <label className="block text-xs font-bold text-blue-400/80 mb-1">رابط امتحان الفصل (اختياري)</label>
+                    <input type="url" value={chapter.examUrl || ""} onChange={e => { const nc = [...chapters]; nc[cIndex].examUrl = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 border border-white/5 focus:border-blue-500/50 rounded-xl p-3 text-sm text-blue-300 outline-none transition-colors shadow-inner mb-2" placeholder="رابط Google Forms" />
+                    
+                    <label className="block text-[10px] font-bold text-emerald-400 mb-1 leading-none">أو كود الامتحان المدمج (HTML Embed)</label>
+                    <textarea value={chapter.examCode || ""} onChange={e => { const nc = [...chapters]; nc[cIndex].examCode = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 border border-white/5 focus:border-emerald-500/50 rounded-xl p-3 text-xs text-zinc-500 outline-none font-mono" placeholder="<iframe>...</iframe>"></textarea>
                   </div>
                 </div>
 

@@ -87,6 +87,7 @@ model Course {
   image       String?
   category    String?
   examUrl     String?
+  examCode    String?      @db.Text
   isExamOnly  Boolean      @default(false)
   gradeLevel  String?      // "الأول الثانوي", "الثاني الثانوي", "الثالث الثانوي"
   subjectId   String
@@ -106,6 +107,7 @@ model Chapter {
   title       String
   description String?
   examUrl     String?
+  examCode    String?      @db.Text
   order       Int
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)

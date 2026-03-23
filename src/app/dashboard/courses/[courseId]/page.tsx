@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, PlayCircle, Lock, CheckCircle2, FileText, HelpCircle, ExternalLink, Trophy } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import CodeRedeemForm from "@/components/courses/CodeRedeemForm";
+import ExamTrigger from "@/components/courses/ExamTrigger";
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ courseId: string }> }) {
   const resolvedParams = await params;
@@ -114,9 +115,17 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
             <div className="flex flex-wrap items-center gap-6 pt-4">
               {isEnrolled ? (
                 <>
-                  <Link href={`/dashboard/courses/${course.id}/lessons/${course.chapters[0]?.lessons[0]?.id || ""}`} className="btn-primary text-xl px-12 py-5 rounded-2xl h-auto shadow-2xl shadow-blue-500/20 active-scale border-none bg-blue-600 hover:bg-blue-500">
-                    ابدأ المذاكرة فوراً
-                  </Link>
+                  {course.isExamOnly ? (
+                    <ExamTrigger 
+                        examUrl={course.examUrl} 
+                        examCode={course.examCode} 
+                        title={`الامتحان الشامل لقسم ${course.title}`} 
+                    />
+                  ) : (
+                    <Link href={`/dashboard/courses/${course.id}/lessons/${course.chapters[0]?.lessons[0]?.id || ""}`} className="btn-primary text-xl px-12 py-5 rounded-2xl h-auto shadow-2xl shadow-blue-500/20 active-scale border-none bg-blue-600 hover:bg-blue-500">
+                      كمل مذاكرة المحتوى
+                    </Link>
+                  )}
                   <div className="flex flex-col">
                     <span className="text-white font-black text-3xl leading-none">{progressPercent}%</span>
                     <span className="text-zinc-500 font-black text-xs uppercase tracking-widest mt-1">نسبة الإنجاز</span>
@@ -154,7 +163,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
       {/* Curriculum */}
       <div className="panel p-8 md:p-12 rounded-[40px] shadow-2xl bg-zinc-950/40 relative group">
         <div className="flex items-center justify-between mb-12 border-b border-white/5 pb-6">
-           <h2 className="text-3xl md:text-4xl font-black text-white">فهرس المحاضرات</h2>
+           <h2 className="text-3xl md:text-4xl font-black text-white">تفاصيل المحتوى والتقييم</h2>
            <div className="flex items-center gap-2 text-zinc-500 font-black text-xs">
               <span className="w-2 h-2 rounded-full bg-blue-500"></span>
               {course.chapters.length} فصول تعليمية
@@ -169,19 +178,36 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
               هذا المنهج مخصص لاختبار قدراتك الشاملة وتدريبك على امتحانات نهاية العام بنظام الـ MCQ الحديث.
             </p>
             {isEnrolled ? (
-              course.examUrl ? (
-                <a href={course.examUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-blue-600 hover:bg-blue-500 text-white py-5 px-12 rounded-[24px] text-2xl font-black shadow-2xl shadow-blue-600/30 hover:scale-105 transition-all group border-none">
-                  ابدأ ماراثون الامتحان <ExternalLink className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-                </a>
-              ) : (
-                <div className="text-amber-500 font-black bg-amber-500/10 px-8 py-4 rounded-2xl border border-amber-500/20 inline-block shadow-inner">الامتحان قيد المراجعة النهائية سيتوفر خلال دقائق.</div>
-              )
+              <ExamTrigger 
+                  examUrl={course.examUrl} 
+                  examCode={course.examCode} 
+                  title={`امتحان شامل لـ ${course.title}`} 
+              />
             ) : (
               <div className="text-zinc-500 font-black bg-zinc-900/80 px-10 py-5 rounded-2xl border border-white/5 inline-block">يتطلب الاشتراك لعرض محتوى الامتحان</div>
             )}
           </div>
         ) : (
           <div className="space-y-12">
+            {course.examUrl && isEnrolled && (
+              <div className="p-6 bg-gradient-to-r from-blue-600/20 to-zinc-950 border border-blue-500/30 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-500/20 border border-blue-500/30 rounded-xl flex items-center justify-center">
+                    <HelpCircle className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-white">الامتحان الشامل المباشر</h3>
+                    <p className="text-sm text-zinc-400 font-bold mt-1">اختبر نفسك وتأكد من فهمك للمنهج بالكامل في نافذة خاصة.</p>
+                  </div>
+                </div>
+                <ExamTrigger 
+                    examUrl={course.examUrl} 
+                    examCode={course.examCode} 
+                    title={`الامتحان الشامل: ${course.title}`} 
+                />
+              </div>
+            )}
+            
             {course.chapters.map((chapter) => (
             <div key={chapter.id} className="space-y-6">
               <div className="flex items-center gap-4">
@@ -194,9 +220,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {chapter.lessons.map((lesson) => {
-                  const isAccessible = isEnrolled; // Removed isLocked logic
+                  const isAccessible = isEnrolled; 
                   const isCompleted = completedLessonIds.has(lesson.id);
-                  const statusColor = isCompleted ? "text-emerald-500" : "text-blue-500";
                   
                   return (
                     <Link
@@ -226,36 +251,19 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
                              {lesson.quizzes.length > 0 && <span className="text-[10px] font-black uppercase tracking-tighter bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-md border border-amber-500/10">Quiz</span>}
                           </div>
                         </div>
-                        <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                           <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center rotate-180">
-                              <ArrowRight className="w-4 h-4" />
-                           </div>
-                        </div>
                       </div>
-                      {!isAccessible && (
-                        <div className="flex items-center justify-center gap-2 mt-4 py-2 rounded-xl bg-black/40 border border-white/5">
-                           <Lock className="w-4 h-4 text-zinc-600" />
-                           <span className="text-xs font-black text-zinc-600">اشترك أولاً لفتح المحتوى</span>
-                        </div>
-                      )}
                     </Link>
                   );
                 })}
               </div>
               
-              {chapter.examUrl && isEnrolled && (
-                <a href={chapter.examUrl} target="_blank" className="block p-6 mt-4 rounded-3xl transition-all border-2 border-dashed border-blue-500/20 hover:border-blue-500/50 hover:bg-blue-500/5 bg-blue-500/[0.02] group shadow-xl">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-[20px] bg-blue-500/20 flex flex-col items-center justify-center shrink-0 border border-blue-500/30 group-hover:scale-110 transition-transform shadow-inner">
-                      <HelpCircle className="w-8 h-8 text-blue-400" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-black text-blue-300 text-2xl mb-1">الامتحان الشامل للباب</h4>
-                      <p className="text-sm text-blue-400/60 font-black">اختبر مستواك الحقيقي في هذا الفصل فوراً.</p>
-                    </div>
-                    <ExternalLink className="w-8 h-8 text-blue-500 opacity-20 group-hover:opacity-100 transition-opacity ml-4" />
-                  </div>
-                </a>
+              {isEnrolled && (
+                <ExamTrigger 
+                    examUrl={chapter.examUrl} 
+                    examCode={chapter.examCode} 
+                    title={`اختبار ${chapter.title}`} 
+                    isChapter 
+                />
               )}
             </div>
           ))}

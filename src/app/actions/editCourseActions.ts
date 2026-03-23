@@ -17,6 +17,7 @@ export interface ChapterUpdateData {
   id?: string;
   title: string;
   examUrl?: string | null;
+  examCode?: string | null;
   lessons: LessonUpdateData[];
 }
 
@@ -36,6 +37,7 @@ export interface CourseCurriculumUpdateData {
   price: string | number;
   imageUrl?: string | null;
   examUrl?: string | null;
+  examCode?: string | null;
   isExamOnly?: boolean;
   gradeLevel?: string | null;
   chapters: ChapterUpdateData[];
@@ -60,6 +62,7 @@ export async function updateCourseWithCurriculum(courseId: string, data: CourseC
           price: parseFloat(data.price.toString()) || 0,
           image: data.imageUrl || null,
           examUrl: data.examUrl || null,
+          examCode: data.examCode || null,
           isExamOnly: data.isExamOnly || false,
           gradeLevel: data.gradeLevel || null,
           subjectId: subject.id
@@ -88,11 +91,11 @@ export async function updateCourseWithCurriculum(courseId: string, data: CourseC
         if (chapterId) {
           await tx.chapter.update({
             where: { id: chapterId },
-            data: { title: chapterData.title, examUrl: chapterData.examUrl || null, order: cIndex + 1 }
+            data: { title: chapterData.title, examUrl: chapterData.examUrl || null, examCode: chapterData.examCode || null, order: cIndex + 1 }
           });
         } else {
           const newChap = await tx.chapter.create({
-            data: { title: chapterData.title, examUrl: chapterData.examUrl || null, order: cIndex + 1, courseId: courseId }
+            data: { title: chapterData.title, examUrl: chapterData.examUrl || null, examCode: chapterData.examCode || null, order: cIndex + 1, courseId: courseId }
           });
           chapterId = newChap.id;
         }

@@ -24,6 +24,7 @@ export interface LessonData {
 export interface ChapterData {
   title: string;
   examUrl?: string;
+  examCode?: string;
   lessons: LessonData[];
 }
 
@@ -34,6 +35,7 @@ export interface CourseCurriculumData {
   price: string | number;
   imageUrl?: string;
   examUrl?: string;
+  examCode?: string;
   isExamOnly?: boolean;
   gradeLevel?: string;
   chapters: ChapterData[];
@@ -56,6 +58,7 @@ export async function createCourseWithCurriculum(data: CourseCurriculumData) {
         price: parseFloat(data.price.toString()) || 0,
         image: data.imageUrl || null,
         examUrl: data.examUrl || null,
+        examCode: data.examCode || null,
         isExamOnly: data.isExamOnly || false,
         gradeLevel: data.gradeLevel || null,
         subjectId: subject.id
@@ -68,6 +71,7 @@ export async function createCourseWithCurriculum(data: CourseCurriculumData) {
         data: {
           title: chapterData.title,
           examUrl: chapterData.examUrl || null,
+          examCode: chapterData.examCode || null,
           order: cIndex + 1,
           courseId: course.id
         }

@@ -42,9 +42,11 @@ export default async function CourseEditPage({ params }: { params: Promise<{ cou
     image: course.image || "",
     gradeLevel: course.gradeLevel || "غير محدد",
     examUrl: course.examUrl || "",
+    examCode: course.examCode || "",
     chapters: course.chapters.map(ch => ({
       ...ch,
       examUrl: ch.examUrl || "",
+      examCode: ch.examCode || "",
       lessons: ch.lessons.map(l => ({
         ...l,
         description: l.description || "",
