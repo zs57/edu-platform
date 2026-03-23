@@ -68,26 +68,19 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
 
   return (
     <div className="bg-[#050505] selection:bg-blue-500/30 overflow-hidden relative" dir="rtl">
-      {/* Optimized Background Elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-5%] left-[-5%] w-[50vw] h-[50vw] rounded-full bg-blue-600/5 blur-[100px]" />
-        <div className="absolute bottom-[-5%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-emerald-600/5 blur-[80px]" />
-        <div className="absolute top-[40%] left-[30%] w-[25vw] h-[25vw] rounded-full bg-purple-600/5 blur-[60px]" />
+      {/* Light Background Strategy */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 bg-[#050505]">
+        <div className="absolute top-0 inset-x-0 h-[500px] bg-gradient-to-b from-blue-600/5 to-transparent" />
       </div>
 
       <nav className={`fixed w-full z-50 top-0 transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-4 shadow-xl' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-14 h-14 relative group-hover:scale-110 transition-transform duration-500">
-               <Image 
-                 src="https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png" 
-                 alt="" 
-                 fill 
-                 className="object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-               />
+            <div className="w-12 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-blue-600/20 transition-all">
+               <Zap className="w-7 h-7 text-white" fill="currentColor" />
             </div>
             <div className="flex flex-col">
-               <span className="text-3xl font-black text-white tracking-tight leading-none">إتقان</span>
+               <span className="text-2xl font-black text-white tracking-tight leading-none">إتقان</span>
                <span className="text-[10px] font-black text-blue-400 tracking-[0.3em] uppercase mt-1.5 opacity-80">ITQAN PLATFORM</span>
             </div>
           </Link>
@@ -131,25 +124,20 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div 
             className="text-center space-y-10"
-            initial="hidden" animate="visible" variants={containerVariants}
+            initial="hidden" animate="visible" variants={itemVariants}
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 text-sm font-black backdrop-blur-xl shadow-2xl relative overflow-hidden group">
-               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-               <Sparkles className="w-5 h-5 animate-spin-slow" /> التحديث الأقوى للمنصة وصل!
-            </motion.div>
+            <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 text-sm font-black shadow-2xl relative overflow-hidden group">
+               <Sparkles className="w-5 h-5" /> التحديث الأقوى للمنصة وصل!
+            </div>
             
-            <motion.h1 variants={itemVariants} className="text-6xl md:text-9xl font-black text-white leading-[1.1] tracking-tighter mix-blend-plus-lighter">
+            <h1 className="text-6xl md:text-9xl font-black text-white leading-[1.1] tracking-tighter">
                منصة إتقان (ITQAN) <br />
                <span className="relative inline-block mt-4">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 drop-shadow-[0_0_40px_rgba(59,130,246,0.3)]">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400">
                     إمبراطورية العلم والتفوق في جيبك!
                   </span>
-                  <motion.div 
-                    initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 1, delay: 0.5 }}
-                    className="absolute -bottom-4 left-0 h-2 bg-gradient-to-r from-blue-600 to-transparent rounded-full shadow-[0_0_20px_blue]" 
-                  />
                </span>
-            </motion.h1>
+            </h1>
               
             <motion.p variants={itemVariants} className="text-xl md:text-3xl text-zinc-400 max-w-5xl mx-auto leading-relaxed font-bold opacity-80 decoration-blue-500/30">
               لو فاكر إن الثانوية العامة &quot;عقدة&quot; أو إن المذاكرة حمل تقيل.. يبقى أنت لسه مشفتش إتقان. إحنا مش مجرد منصة بتشرح دروس، إحنا سيستم متكامل مبني على &quot;إتقان الوقت&quot; عشان يخليك تفرتك المنهج وأنت في قمة روقانك.
@@ -198,14 +186,10 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
 
       {/* Analysis Concept Card (Visual High-end) */}
       <section className="px-6 pb-32">
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}
-          className="max-w-5xl mx-auto bg-zinc-950/40 backdrop-blur-xl border border-white/5 p-10 md:p-16 rounded-[4rem] shadow-2xl relative overflow-hidden group will-change-transform"
-        >
+        <div className="max-w-5xl mx-auto bg-zinc-900/40 border border-white/5 p-10 md:p-16 rounded-[4rem] relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-blue-600/5 to-transparent pointer-events-none" />
-          <div className="absolute top-[-20%] right-[-20%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full" />
           
-          <div className="grid md:grid-cols-2 gap-16 items-center flex-row-reverse">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
              <div className="space-y-8">
                 <div className="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center border border-blue-500/20 shadow-lg">
                    <Target className="w-8 h-8 text-blue-400" />
@@ -260,7 +244,7 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
                 <div className="absolute -inset-4 bg-gradient-to-tr from-blue-600 to-emerald-600 blur-[80px] opacity-20 -z-10 animate-pulse" />
              </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Main Features Grid (Premium Design) */}
@@ -524,13 +508,8 @@ export default function LandingPageClient({ courses, studentCount, courseCount, 
         
         <div className="max-w-7xl mx-auto px-6 text-center space-y-12">
            <div className="flex flex-col items-center gap-6">
-              <div className="w-20 h-20 relative group-hover:scale-110 transition-transform duration-500">
-                 <Image 
-                   src="https://i.postimg.cc/J7KdmMYh/Screenshot-2026-03-22-191339.png" 
-                   alt="" 
-                   fill 
-                   className="object-contain"
-                 />
+              <div className="w-16 h-16 bg-blue-600/10 border border-blue-500/20 rounded-2xl flex items-center justify-center shadow-2xl group cursor-pointer transition-transform">
+                <ShieldAlert className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-3xl font-black text-white tracking-widest">أكاديمية إتقان</h2>
               <p className="text-zinc-500 font-bold text-xl max-w-sm mx-auto leading-relaxed">
