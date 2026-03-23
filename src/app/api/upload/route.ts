@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import fs from "fs/promises";
+import path from "path";
 
 export async function POST(req: Request) {
   // Check authorization
@@ -18,23 +20,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "No file provided" }, { status: 400 });
     }
 
-    // In a real application, you would save this to S3, Google Cloud Storage, or local disk.
-    // For local mock demonstration, we assume success.
-    
-    // Simulate upload delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Ensure upload directory exists
+    const uploadDir = path.join(process.cwd(), "public/uploads");
+    try {
+      await fs.access(uploadDir);
+    } catch {
+      await fs.mkdir(uploadDir, { recursive: true });
+    }
 
-    // const buffer = Buffer.from(await file.arrayBuffer());
-    // await fs.writeFile(path.join(process.cwd(), "public/uploads", file.name), buffer);
+    // Generate unique filename to avoid collisions
+    const fileExtension = file.name.split('.').pop();
+    const uniqueFilename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExtension}`;
+    
+    // Convert File to Buffer
+    const buffer = Buffer.from(await file.arrayBuffer());
+    
+    // Write file to local disk
+    await fs.writeFile(path.join(uploadDir, uniqueFilename), buffer);
 
     return NextResponse.json({ 
       message: "File uploaded successfully", 
-      filename: file.name,
-      url: `/uploads/${file.name}`
+      filename: uniqueFilename,
+      url: `/uploads/${uniqueFilename}`
     }, { status: 201 });
 
   } catch (error) {
-    console.error(error);
+    console.error("Upload error:", error);
     return NextResponse.json({ message: "Upload failed" }, { status: 500 });
   }
 }

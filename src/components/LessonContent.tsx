@@ -117,7 +117,7 @@ export default function LessonContent({ lesson, attachments }: LessonContentProp
                   </div>
 
                   <div className="relative z-10 mt-4">
-                    <p className="font-black text-zinc-100 text-lg mb-1 truncate group-hover:text-white transition-colors">{file.title}</p>
+                    <p className="font-black text-zinc-100 text-lg mb-1 group-hover:text-white transition-colors">{file.title}</p>
                     <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest bg-white/5 w-fit px-2 py-0.5 rounded-md">{file.type || "مرفق إضافي"}</p>
                   </div>
                </motion.a>

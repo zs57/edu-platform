@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { updateCourseWithCurriculum } from "@/app/actions/editCourseActions";
-import { ArrowLeft, BookOpen, PlusCircle, Trash2, Video, FileText, Loader2, Save, Edit3, Plus, ArrowRight, Info, GripVertical, PlayCircle, Lock, Upload } from "lucide-react";
+import { ArrowLeft, BookOpen, PlusCircle, Trash2, Video, FileText, Loader2, Save, Edit3, Plus, ArrowRight, Info, GripVertical, PlayCircle, Lock, Upload, FileUp } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -51,6 +51,7 @@ interface CourseData {
 export default function CourseEditClient({ course, existingSubjects }: { course: CourseData; existingSubjects: Subject[] }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isUploading, setIsUploading] = useState<string | null>(null);
 
   const [title, setTitle] = useState(course.title);
   const [description, setDescription] = useState(course.description || "");
@@ -100,6 +101,53 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
     setChapters(newChapters);
   };
 
+  const handleFileUpload = async (file: File, type: "image" | "lesson" | "attachment", cIndex?: number, lIndex?: number, aIndex?: number) => {
+    const uploadId = `${type}-${cIndex ?? ''}-${lIndex ?? ''}-${aIndex ?? ''}`;
+    setIsUploading(uploadId);
+    
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json();
+      
+      if (type === "image") {
+        setImageUrl(data.url);
+        toast.success("تم رفع الغلاف بنجاح!");
+      } else if (type === "lesson") {
+        if (cIndex !== undefined && lIndex !== undefined) {
+          const newChapters = [...chapters];
+          newChapters[cIndex].lessons[lIndex].content = data.url;
+          setChapters(newChapters);
+          toast.success("تم رفع الملف الأساسي!");
+        }
+      } else if (type === "attachment") {
+        if (cIndex !== undefined && lIndex !== undefined && aIndex !== undefined) {
+          const newChapters = [...chapters];
+          newChapters[cIndex].lessons[lIndex].attachments[aIndex].fileUrl = data.url;
+          // Set title to filename without extension if it's still default
+          if (newChapters[cIndex].lessons[lIndex].attachments[aIndex].title === "ملف جديد") {
+             const fileName = file.name.split('.').slice(0, -1).join('.') || file.name;
+             newChapters[cIndex].lessons[lIndex].attachments[aIndex].title = fileName;
+          }
+          setChapters(newChapters);
+          toast.success("تم رفع المرفق!");
+        }
+      }
+    } catch (error) {
+      toast.error("فشل الرفع، حاول مرة أخرى.");
+      console.error(error);
+    } finally {
+      setIsUploading(null);
+    }
+  };
+
   const removeAttachment = (cIndex: number, lIndex: number, aIndex: number) => {
     const newChapters = [...chapters];
     newChapters[cIndex].lessons[lIndex].attachments.splice(aIndex, 1);
@@ -129,16 +177,17 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
       if (res.error) toast.error(res.error);
       else {
         toast.success("تم تعديل الكورس والتحديث بنجاح!");
+        router.refresh();
         router.push("/dashboard/admin");
       }
     });
   };
 
   return (
-    <div className="max-w-5xl mx-auto pb-24 relative z-10">
+    <div className="max-w-5xl mx-auto pb-24 relative z-10" dir="rtl">
       <div className="flex items-center justify-between mb-8">
         <Link href="/dashboard/admin" className="text-zinc-400 hover:text-white flex items-center gap-2 font-bold transition-colors">
-          عودة للوحة الإدارة <ArrowLeft className="w-5 h-5" />
+          <ArrowRight className="w-5 h-5" /> عودة للوحة الإدارة 
         </Link>
         <button 
           onClick={handleSave}
@@ -194,8 +243,14 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
-                <label className="block text-sm font-bold text-zinc-400 mb-2">رابط صورة الكورس الغلاف</label>
-                <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500 transition-colors shadow-inner" placeholder="مثال: https://i.imgur.com/image.jpg" />
+                <label className="block text-sm font-bold text-zinc-400 mb-2">صورة الغلاف (رابط أو رفع)</label>
+                <div className="flex gap-2">
+                  <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className="flex-1 bg-zinc-900 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-blue-500 transition-colors shadow-inner text-sm" placeholder="مثال: https://i.imgur.com/image.jpg" />
+                  <label className="cursor-pointer bg-blue-600 hover:bg-blue-500 w-14 rounded-2xl flex items-center justify-center transition-colors shrink-0">
+                    <input type="file" className="hidden" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], "image")} />
+                    {isUploading === "image--" ? <Loader2 className="w-5 h-5 animate-spin text-white" /> : <Upload className="w-5 h-5 text-white" />}
+                  </label>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-bold text-zinc-400 mb-2">سعر الكورس بالجنيه</label>
@@ -231,7 +286,7 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
 
           <div className="space-y-6">
             {chapters.map((chapter, cIndex: number) => (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={cIndex} className="bg-black/60 border border-white/10 rounded-3xl p-6 relative group shadow-xl">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={cIndex} className="bg-black/60 border border-white/10 rounded-3xl p-6 relative group shadow-xl text-right">
                 <button onClick={() => removeChapter(cIndex)} className="absolute top-6 left-6 w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-50 hover:opacity-100">
                   <Trash2 className="w-5 h-5" />
                 </button>
@@ -247,7 +302,7 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
                   </div>
                 </div>
 
-                <div className="space-y-4 pl-4 md:pl-8 border-l-2 border-white/5 pt-2">
+                <div className="space-y-4 pr-4 md:pr-8 border-r-2 border-white/5 pt-2">
                   {chapter.lessons.map((lesson, lIndex: number) => (
                     <div key={lIndex} className="bg-zinc-900 border border-white/5 p-5 rounded-2xl flex flex-col gap-4 relative group/lesson shadow-md hover:border-white/10 transition-all">
                        <button onClick={() => removeLesson(cIndex, lIndex)} className="absolute top-5 left-5 text-red-400/30 hover:text-red-400 transition-opacity">
@@ -261,38 +316,50 @@ export default function CourseEditClient({ course, existingSubjects }: { course:
                        
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div className="flex items-center gap-3">
-                           <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0">
-                             <Video className="w-4 h-4 text-red-500" />
+                           <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0">
+                             <Video className="w-5 h-5 text-red-500" />
                            </div>
-                           <input type="text" placeholder="رابط فيديو الشرح المباشر أو يوتيوب" value={lesson.videoUrl} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].videoUrl = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 rounded-xl p-3 text-sm text-zinc-300 outline-none border border-white/5 focus:border-red-500 shadow-inner" dir="ltr" />
+                           <input type="text" placeholder="رابط فيديو الشرح المباشر" value={lesson.videoUrl} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].videoUrl = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 rounded-xl p-3 text-sm text-zinc-300 outline-none border border-white/5 focus:border-red-500 shadow-inner" dir="ltr" />
                          </div>
                          <div className="flex items-center gap-3">
-                           <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
-                             <FileText className="w-4 h-4 text-blue-500" />
+                           <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                             <FileText className="w-5 h-5 text-blue-500" />
                            </div>
-                           <input type="text" placeholder="رابط المذكرة الرئيسية (PDF Direct Link)" value={lesson.content} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].content = e.target.value; setChapters(nc); }} className="w-full bg-zinc-950 rounded-xl p-3 text-sm text-zinc-300 outline-none border border-white/5 focus:border-blue-500 shadow-inner" dir="ltr" />
+                           <div className="flex-1 flex gap-2">
+                             <input type="text" placeholder="رابط المذكرة الأساسية" value={lesson.content} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].content = e.target.value; setChapters(nc); }} className="flex-1 bg-zinc-950 rounded-xl p-3 text-xs text-zinc-300 outline-none border border-white/5 focus:border-blue-500 shadow-inner" dir="ltr" />
+                             <label className="cursor-pointer bg-blue-600 hover:bg-blue-500 px-3 rounded-xl flex items-center justify-center transition-colors">
+                               <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], "lesson", cIndex, lIndex)} />
+                               {isUploading === `lesson-${cIndex}-${lIndex}-` ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Upload className="w-4 h-4 text-white" />}
+                             </label>
+                           </div>
                          </div>
                        </div>
 
                        {/* Extra Attachments UI */}
                        <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
-                         <p className="text-xs font-bold text-zinc-500">مرفقات وملفات إضافية (اختياري)</p>
+                         <p className="text-xs font-bold text-zinc-500">مرفقات وملفات إضافية (مثل الواجب، الإجابات)</p>
                          {lesson.attachments?.map((attachment, aIndex: number) => (
                            <div key={aIndex} className="flex flex-col sm:flex-row gap-2 relative group/att">
-                             <input type="text" placeholder="عنوان المرفق (مثال: نموذج الإجابة)" value={attachment.title} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].attachments[aIndex].title = e.target.value; setChapters(nc); }} className="w-full sm:w-1/3 bg-black/40 border border-white/5 focus:border-zinc-500 p-2 text-xs text-white rounded-lg outline-none" />
-                             <input type="text" placeholder="رابط المرفق..." value={attachment.fileUrl} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].attachments[aIndex].fileUrl = e.target.value; setChapters(nc); }} className="w-full sm:w-2/3 bg-black/40 border border-white/5 focus:border-zinc-500 p-2 text-xs text-zinc-400 rounded-lg outline-none text-left" dir="ltr" />
+                             <input type="text" placeholder="عنوان المرفق" value={attachment.title} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].attachments[aIndex].title = e.target.value; setChapters(nc); }} className="w-full sm:w-1/3 bg-black/40 border border-white/5 focus:border-zinc-500 p-2 text-xs text-white rounded-lg outline-none font-bold" />
+                             <div className="flex-1 flex gap-2">
+                               <input type="text" placeholder="رابط الملف..." value={attachment.fileUrl} onChange={e => { const nc = [...chapters]; nc[cIndex].lessons[lIndex].attachments[aIndex].fileUrl = e.target.value; setChapters(nc); }} className="flex-1 bg-black/40 border border-white/5 focus:border-zinc-500 p-2 text-xs text-zinc-400 rounded-lg outline-none text-left" dir="ltr" />
+                               <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 px-3 rounded-lg flex items-center justify-center transition-colors">
+                                 <input type="file" className="hidden" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], "attachment", cIndex, lIndex, aIndex)} />
+                                 {isUploading === `attachment-${cIndex}-${lIndex}-${aIndex}` ? <Loader2 className="w-3 h-3 animate-spin text-zinc-400" /> : <FileUp className="w-3 h-3 text-zinc-400" />}
+                               </label>
+                             </div>
                              <button onClick={() => removeAttachment(cIndex, lIndex, aIndex)} className="absolute -left-3 -top-3 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/att:opacity-100 transition-opacity"><Trash2 className="w-3 h-3" /></button>
                            </div>
                          ))}
-                         <button onClick={() => addAttachment(cIndex, lIndex)} className="text-zinc-400 hover:text-white bg-zinc-950 px-3 py-1.5 rounded-lg border border-white/5 text-xs font-bold flex items-center gap-1.5 transition-colors">
-                           <PlusCircle className="w-3 h-3" /> إضافة مرفق
+                         <button onClick={() => addAttachment(cIndex, lIndex)} className="text-zinc-500 hover:text-white bg-zinc-950 px-3 py-1.5 rounded-lg border border-white/5 text-xs font-bold flex items-center gap-1.5 transition-colors">
+                           <PlusCircle className="w-3 h-3" /> إضافة مرفق جديد للحصة
                          </button>
                        </div>
                     </div>
                   ))}
                   
                   <button onClick={() => addLesson(cIndex)} className="text-zinc-500 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 mt-4 transition-all">
-                    <PlusCircle className="w-4 h-4" /> إضافة درس للفصل
+                    <PlusCircle className="w-4 h-4" /> إضافة درس جديد داخل الفصل
                   </button>
                 </div>
               </motion.div>
