@@ -189,7 +189,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
           </div>
         ) : (
           <div className="space-y-12">
-            {course.examUrl && isEnrolled && (
+            {(course.examUrl || course.examCode) && isEnrolled && (
               <div className="p-6 bg-gradient-to-r from-blue-600/20 to-zinc-950 border border-blue-500/30 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_0_30px_rgba(59,130,246,0.1)]">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-blue-500/20 border border-blue-500/30 rounded-xl flex items-center justify-center">
