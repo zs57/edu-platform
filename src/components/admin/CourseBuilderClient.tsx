@@ -210,6 +210,14 @@ export default function CourseBuilderClient({ existingSubjects }: { existingSubj
                   {isUploading === "image--" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4 text-white" />}
                 </label>
               </div>
+              {imageUrl && (
+                <div className="mt-4 relative h-32 w-full rounded-2xl overflow-hidden border border-white/5 bg-zinc-950">
+                  <img src={imageUrl} alt="Preview" className="w-full h-full object-cover opacity-50" />
+                  <div className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-blue-400 uppercase tracking-widest bg-black/40">
+                    معاينة الغلاف الجديد
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-bold text-zinc-400 mb-2">سعر الكورس</label>
