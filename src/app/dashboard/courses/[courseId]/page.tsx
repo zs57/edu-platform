@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, PlayCircle, Lock, CheckCircle2, FileText, HelpCircle, ExternalLink } from "lucide-react";
+import { ArrowRight, PlayCircle, Lock, CheckCircle2, FileText, HelpCircle, ExternalLink, Trophy } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
